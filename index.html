@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f4ee">
+  <meta name="description" content="Una pequeña colección de recuerdos para celebrar nuestros meses juntos.">
+  <title>Ivan &amp; Carol — 5 meses</title>
+
+  <!-- Tipografías (no son librerías: solo las fuentes de Google Fonts). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+
+  <main class="app">
+
+    <!-- ========================================================= -->
+    <!-- PANTALLA 1 · BIENVENIDA                                   -->
+    <!-- ========================================================= -->
+    <section class="screen screen--welcome is-active" id="welcomeScreen" aria-labelledby="coupleNames">
+      <header class="welcome__header">
+        <p class="wordmark" id="welcomeWordmark" aria-label="Iniciales de la pareja">I <span class="wordmark__amp">&amp;</span> C</p>
+        <p class="welcome__month-tag" id="welcomeMonthTag">05 meses</p>
+      </header>
+
+      <div class="welcome__content">
+        <p class="eyebrow" id="welcomeEyebrow">Nuestros Meses Juntos</p>
+
+        <h1 class="couple" id="coupleNames" aria-label="Ivan y Carol">
+          <span id="firstName">Ivan</span>
+          <span class="couple__amp" aria-hidden="true">&amp;</span>
+          <span id="secondName">Carol</span>
+        </h1>
+
+        <p class="welcome__subtitle" id="welcomeSubtitle">
+          Nuestro tiempo juntos ha sido increíble. Cada momento a tu lado es un recuerdo que me llena de alegría
+        </p>
+
+        <button class="button button--primary welcome__cta" id="startButton" type="button">
+          <span id="startLabel">Recordemos estos meses</span>
+          <span class="button__icon" aria-hidden="true">→</span>
+        </button>
+
+        <p class="load-error" id="loadError" role="alert" hidden></p>
+      </div>
+
+      <footer class="welcome__footer">
+        <span id="welcomeChapters">6 capítulos</span>
+        <span class="welcome__footer-note" id="welcomeFooterNote">Hechos de días juntos</span>
+      </footer>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- PANTALLA 2 · RECUERDOS                                     -->
+    <!-- ========================================================= -->
+    <section class="screen screen--memories" id="memoriesScreen" aria-labelledby="memoriesTitle" hidden>
+      <h1 class="sr-only" id="memoriesTitle" tabindex="-1">Nuestros recuerdos</h1>
+
+      <div class="memories__shell">
+        <header class="memories__header">
+          <p class="wordmark" id="memoriesWordmark" aria-label="Iniciales de la pareja">I <span class="wordmark__amp">&amp;</span> C</p>
+          <p class="memories__header-label">Nuestra historia</p>
+          <p class="progress" role="group" aria-label="Progreso de los recuerdos">
+            <span id="progressCurrent">01</span><span class="progress__separator" aria-hidden="true">/</span><span id="progressTotal">06</span>
+          </p>
+        </header>
+
+        <div class="slideshow" role="region" aria-roledescription="carrusel" aria-label="Recuerdos de la pareja">
+          <article class="slide" id="slide" aria-labelledby="slideQuote">
+            <figure class="slide__figure">
+              <!-- El contenido de cada diapositiva vive en /slides/recuerdo-XX.js.
+                   Cada diapositiva acepta todas las fotos que quieras. -->
+              <img class="slide__image" id="slideImage" alt="Recuerdo de la pareja" width="600" height="400" decoding="async">
+
+              <div class="slide__photo-controls" id="photoControls" role="group" aria-label="Fotos de este recuerdo" hidden>
+                <button class="photo-control" id="photoPrevButton" type="button" aria-label="Foto anterior">
+                  <span aria-hidden="true">←</span>
+                </button>
+                <span class="slide__photo-count" aria-hidden="true">
+                  <span id="photoCurrent">1</span><span class="slide__photo-separator">/</span><span id="photoTotal">1</span>
+                </span>
+                <button class="photo-control" id="photoNextButton" type="button" aria-label="Foto siguiente">
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </figure>
+
+            <div class="slide__thumbs" id="slideThumbs" role="group" aria-label="Miniaturas de este recuerdo" hidden></div>
+
+            <div class="slide__body">
+              <p class="slide__chapter" aria-hidden="true">
+                <span class="slide__chapter-label">Capítulo</span>
+                <span id="slideChapter">01</span>
+              </p>
+
+              <blockquote class="slide__quote" id="slideQuote">
+                <span id="slideText">5 meses a tu lado y todavía te miro y me sorprende lo hermosa que eres.</span>
+                <span class="slide__heart" id="slideHeart" aria-hidden="true">♥</span>
+              </blockquote>
+            </div>
+          </article>
+
+          <nav class="controls" aria-label="Navegación entre recuerdos">
+            <button class="button button--ghost control-button" id="prevButton" type="button" disabled>
+              <span class="button__icon" aria-hidden="true">←</span>
+              <span>Anterior</span>
+            </button>
+
+            <div class="dots" id="dots" role="group" aria-label="Ir a un recuerdo"></div>
+
+            <button class="button button--solid control-button" id="nextButton" type="button">
+              <span id="nextLabel">Siguiente</span>
+              <span class="button__icon" id="nextIcon" aria-hidden="true">→</span>
+            </button>
+          </nav>
+
+          <p class="sr-only" id="slideStatus" aria-live="polite" aria-atomic="true"></p>
+        </div>
+
+        <footer class="memories__footer">
+          <span>Hecho con cariño</span>
+          <span id="memoriesFooterMonths">5 meses juntos</span>
+        </footer>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Configuración general: nombres, meses, bienvenida y lista de diapositivas -->
+  <script src="js/config.js"></script>
+
+  <!-- La aplicación carga automáticamente las diapositivas de /slides -->
+  <script src="js/app.js"></script>
+  
+</body>
+</html>
