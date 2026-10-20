@@ -36,6 +36,10 @@ function getRegisteredSlides() {
     .map((key) => registry[key]);
 }
 
+function isLetterSlide(slide) {
+  return Boolean(slide && (slide.layout === "letter" || slide.letter));
+}
+
 function loadScriptFile(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
@@ -79,6 +83,10 @@ const slideElement = document.getElementById("slide");
 const slideImage = document.getElementById("slideImage");
 const slideText = document.getElementById("slideText");
 const slideChapter = document.getElementById("slideChapter");
+const letterEyebrow = document.getElementById("letterEyebrow");
+const letterBody = document.getElementById("letterBody");
+const letterSignature = document.getElementById("letterSignature");
+const letterBig = document.getElementById("letterBig");
 const slideStatus = document.getElementById("slideStatus");
 const progressCurrent = document.getElementById("progressCurrent");
 const progressTotal = document.getElementById("progressTotal");
@@ -160,7 +168,11 @@ const months = Number.isFinite(parsedMonths) && parsedMonths > 0 ? parsedMonths 
 const monthWord = months === 1 ? "mes" : "meses";
 
 function populateContent() {
-  const chapterWord = slides.length === 1 ? "capítulo" : "capítulos";
+  const letterCount = slides.filter(isLetterSlide).length;
+  const memoryCount = slides.length - letterCount;
+  const chapterSummary = letterCount
+    ? `${memoryCount} recuerdos y ${letterCount === 1 ? "una carta" : `${letterCount} cartas`}`
+    : `${slides.length} ${slides.length === 1 ? "capítulo" : "capítulos"}`;
 
   document.title = `${firstName} & ${secondName} — ${months} ${monthWord}`;
 
@@ -175,7 +187,7 @@ function populateContent() {
   setText("welcomeSubtitle", CONFIG.welcome.subtitle);
   setText("startLabel", CONFIG.welcome.buttonLabel);
   setText("welcomeMonthTag", `${pad(months)} ${monthWord}`);
-  setText("welcomeChapters", `${slides.length} ${chapterWord}`);
+  setText("welcomeChapters", chapterSummary);
   setText("welcomeFooterNote", CONFIG.welcome.footerNote);
   setText("memoriesFooterMonths", `${months} ${monthWord} juntos`);
 
@@ -191,17 +203,22 @@ function populateContent() {
 function buildDots() {
   dotsContainer.replaceChildren();
 
-  slides.forEach((_, index) => {
+  slides.forEach((slide, index) => {
     const dot = document.createElement("button");
     dot.type = "button";
     dot.className = "dot";
-    dot.setAttribute("aria-label", `Ir al recuerdo ${index + 1}`);
+    dot.setAttribute(
+      "aria-label",
+      isLetterSlide(slide) ? "Ir a la carta final" : `Ir al recuerdo ${index + 1}`
+    );
     dot.addEventListener("click", () => goToSlide(index));
     dotsContainer.appendChild(dot);
   });
 }
 
 function getSlideImages(slide, slideIndex) {
+  if (isLetterSlide(slide)) return [];
+
   const rawImages = Array.isArray(slide.images)
     ? slide.images
     : slide.image
@@ -232,6 +249,30 @@ function getSlideImages(slide, slideIndex) {
     src: fallbackImage(pad(slideIndex + 1)),
     alt: `Recuerdo ${slideIndex + 1} de la pareja`
   }];
+}
+
+function renderLetter(slide) {
+  const letter = slide.letter || {};
+  const eyebrow = letter.eyebrow || `Para ti, ${secondName}`;
+  const paragraphs = Array.isArray(letter.paragraphs) ? letter.paragraphs.filter(Boolean) : [];
+
+  letterEyebrow.textContent = eyebrow;
+  letterBody.replaceChildren(
+    ...paragraphs.map((paragraph) => {
+      const element = document.createElement("p");
+      element.textContent = paragraph;
+      return element;
+    })
+  );
+  letterSignature.textContent = letter.signature || firstName;
+  letterBig.textContent = letter.bigText || "TE AMO";
+
+  return [
+    eyebrow,
+    ...paragraphs,
+    letterSignature.textContent,
+    letterBig.textContent
+  ].join(" ");
 }
 
 function buildPhotoGallery(images) {
@@ -302,6 +343,11 @@ function updatePhotoInterface() {
 }
 
 function updateSlideStatus() {
+  if (slideElement.classList.contains("is-letter")) {
+    slideStatus.textContent = `Carta final. ${slideText.textContent}`;
+    return;
+  }
+
   const photoInfo = currentSlideImages.length > 1
     ? ` Foto ${currentPhotoIndex + 1} de ${currentSlideImages.length}.`
     : "";
@@ -360,12 +406,13 @@ function selectPhoto(index) {
 function updateInterface() {
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === slides.length - 1;
+  const isLetter = slideElement.classList.contains("is-letter");
 
   slideChapter.textContent = pad(currentIndex + 1);
   progressCurrent.textContent = pad(currentIndex + 1);
   progressElement.setAttribute(
     "aria-label",
-    `Recuerdo ${currentIndex + 1} de ${slides.length}`
+    `${isLetter ? "Página" : "Recuerdo"} ${currentIndex + 1} de ${slides.length}`
   );
 
   prevButton.disabled = isFirst;
@@ -395,6 +442,22 @@ function applySlide(index) {
   // reinicia la galería de la nueva diapositiva en su primera foto.
   photoTransitionId += 1;
   photoBusy = false;
+
+  if (isLetterSlide(slide)) {
+    slideElement.classList.add("is-letter");
+    slideElement.classList.remove("has-gallery");
+    currentSlideImages = [];
+    photoControls.hidden = true;
+    slideThumbs.hidden = true;
+    slideThumbs.replaceChildren();
+    slideImage.removeAttribute("src");
+    slideImage.alt = "";
+    slideText.textContent = renderLetter(slide);
+    updateSlideStatus();
+    return;
+  }
+
+  slideElement.classList.remove("is-letter");
   currentSlideImages = getSlideImages(slide, index);
 
   slideText.textContent = slide.text || "Un recuerdo más juntos.";

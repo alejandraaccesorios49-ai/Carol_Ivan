@@ -20,7 +20,8 @@ Página de aniversario en HTML, CSS y JavaScript puro, sin recargar el documento
 │   ├── recuerdo-03.js
 │   ├── recuerdo-04.js
 │   ├── recuerdo-05.js
-│   └── recuerdo-06.js
+│   ├── recuerdo-06.js
+│   └── recuerdo-07.js         Carta final con el "TE AMO"
 └── README.md
 ```
 
@@ -50,6 +51,20 @@ los controles de fotos y las miniaturas se ocultan automáticamente.
 Las fotos se muestran en un marco vertical para conservar los rostros.
 El encuadre se ajusta desde `.slide__figure` y `object-position` en
 `css/styles.css`.
+
+## Página final
+
+`slides/recuerdo-07.js` usa `layout: "letter"` en lugar de fotos. Su
+contenido se edita en el objeto `letter`:
+
+```js
+letter: {
+  eyebrow: "Para ti, Carol",
+  paragraphs: ["Primer párrafo...", "Segundo párrafo..."],
+  signature: "Ivan",
+  bigText: "TE AMO"
+}
+```
 
 ## Abrir la página
 

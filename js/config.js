@@ -39,6 +39,7 @@ window.SITE_CONFIG = {
     "slides/recuerdo-03.js",
     "slides/recuerdo-04.js",
     "slides/recuerdo-05.js",
-    "slides/recuerdo-06.js"
+    "slides/recuerdo-06.js",
+    "slides/recuerdo-07.js"
   ]
 };
