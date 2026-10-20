@@ -4,8 +4,7 @@
    DIAPOSITIVA 01
    ------------------------------------------------------------
    Fotos locales dentro de /img.
-   Las rutas deben ser relativas (sin empezar con /) para que
-   funcionen tanto en local como en GitHub Pages.
+   Las rutas deben ser relativas para funcionar en GitHub Pages.
    ============================================================ */
 window.MEMORY_SLIDES = window.MEMORY_SLIDES || {};
 
